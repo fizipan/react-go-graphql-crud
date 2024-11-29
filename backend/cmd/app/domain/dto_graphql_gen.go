@@ -5,9 +5,10 @@ package model
 type Mutation struct {
 }
 
-type NewPost struct {
-	Title       string `json:"title"`
-	Description string `json:"description"`
+type NewProduct struct {
+	Name  string  `json:"name"`
+	Price float64 `json:"price"`
+	Stock int     `json:"stock"`
 }
 
 type NewUser struct {

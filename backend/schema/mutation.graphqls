@@ -1,4 +1,9 @@
 type Mutation {
-    createPost(input: NewPost!): Post!
     createUser(input: NewUser!): User!
+    updateUser(id: ID!, input: NewUser!): User!
+    deleteUser(id: ID!): User!
+
+    createProduct(input: NewProduct!): Product!
+    updateProduct(id: ID!, input: NewProduct!): Product!
+    deleteProduct(id: ID!): Product!
 }
