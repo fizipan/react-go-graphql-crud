@@ -46,6 +46,36 @@ func colHelper(db *DB, collectionName string) *mongo.Collection {
 	return db.client.Database("testdb").Collection(collectionName)
 }
 
+// login
+func (db *DB) Login(input *model.NewLogin) (*model1.Auth, error) {
+	collection := colHelper(db, "users")
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	var user model1.User
+	err := collection.FindOne(ctx, bson.M{"email": input.Email}).Decode(&user)
+	if err != nil {
+		return nil, err
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password))
+	if err != nil {
+		return nil, err
+	}
+
+	// generate token
+	token, err := GenerateJWT(user.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	auth := &model1.Auth{
+		Token: token,
+	}
+
+	return auth, nil
+}
+
 func (db *DB) CreateUser(input *model.NewUser) (*model1.User, error) {
 	collection := colHelper(db, "users")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -285,6 +315,21 @@ func (db *DB) GetUsers() ([]*model1.User, error) {
 	}
 
 	return users, nil
+}
+
+// get user by email
+func (db *DB) GetUserByEmail(email string) (*model1.User, error) {
+	collection := colHelper(db, "users")
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	var user model1.User
+	err := collection.FindOne(ctx, bson.M{"email": email}).Decode(&user)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
 }
 
 func (db *DB) GetUser(id string) (*model1.User, error) {

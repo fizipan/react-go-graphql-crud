@@ -99,8 +99,7 @@ models:
       - github.com/99designs/gqlgen/graphql.Int32
   User:
     model: backend/cmd/app/domain/dao.User
-  Post:
-    model: backend/cmd/app/domain/dao.Post
-    fields:
-      user:
-        resolver: true
+  Product:
+    model: backend/cmd/app/domain/dao.Product
+  Auth:
+    model: backend/cmd/app/domain/dao.Auth

@@ -5,6 +5,11 @@ package model
 type Mutation struct {
 }
 
+type NewLogin struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 type NewProduct struct {
 	Name  string  `json:"name"`
 	Price float64 `json:"price"`

@@ -8,4 +8,5 @@ import (
 	_ "github.com/gin-gonic/gin"
 	_ "github.com/joho/godotenv"
 	_ "go.mongodb.org/mongo-driver/mongo"
+	_ "github.com/golang-jwt/jwt/v5"
 )

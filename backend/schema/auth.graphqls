@@ -1,0 +1,8 @@
+type Auth {
+    token: String!
+}
+
+input NewLogin {
+    email: String!
+    password: String!
+}

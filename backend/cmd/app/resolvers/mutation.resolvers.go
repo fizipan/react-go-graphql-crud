@@ -11,6 +11,15 @@ import (
 	"context"
 )
 
+// Login is the resolver for the login field.
+func (r *mutationResolver) Login(ctx context.Context, input model.NewLogin) (*model1.Auth, error) {
+	auth, err := r.DB.Login(&input)
+	if err != nil {
+		return nil, err
+	}
+	return auth, nil
+}
+
 // CreateUser adalah resolver untuk field createUser
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model1.User, error) {
 	user, err := r.DB.CreateUser(&input)

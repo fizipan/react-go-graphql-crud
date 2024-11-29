@@ -8,7 +8,13 @@ import (
 	model "backend/cmd/app/domain/dao"
 	"backend/graph"
 	"context"
+	"fmt"
 )
+
+// Me is the resolver for the me field.
+func (r *queryResolver) Me(ctx context.Context) (*model.User, error) {
+	panic(fmt.Errorf("not implemented: Me - me"))
+}
 
 // GetUsers is the resolver for the getUsers field.
 func (r *queryResolver) GetUsers(ctx context.Context) ([]*model.User, error) {

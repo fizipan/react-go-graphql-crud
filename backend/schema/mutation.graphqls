@@ -1,4 +1,6 @@
 type Mutation {
+    login(input: NewLogin!): Auth!
+
     createUser(input: NewUser!): User!
     updateUser(id: ID!, input: NewUser!): User!
     deleteUser(id: ID!): User!
