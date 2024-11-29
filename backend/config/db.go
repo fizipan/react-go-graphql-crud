@@ -12,6 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type DB struct {
@@ -50,6 +51,14 @@ func (db *DB) CreateUser(input *model.NewUser) (*model1.User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
+	// hash password
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
+
+	input.Password = string(hashedPassword)
+
 	res, err := collection.InsertOne(ctx, input)
 
 	if err != nil {
@@ -57,9 +66,10 @@ func (db *DB) CreateUser(input *model.NewUser) (*model1.User, error) {
 	}
 
 	user := &model1.User{
-		ID:    res.InsertedID.(primitive.ObjectID).Hex(),
-		Name:  input.Name,
-		Email: input.Email,
+		ID:       res.InsertedID.(primitive.ObjectID).Hex(),
+		Name:     input.Name,
+		Email:    input.Email,
+		Password: input.Password,
 	}
 
 	return user, err
@@ -87,11 +97,25 @@ func (db *DB) UpdateUser(id string, input *model.NewUser) (*model1.User, error) 
 		return nil, fmt.Errorf("error checking user existence: %v", err)
 	}
 
+	// Periksa apakah ada perubahan password
+	if input.Password != "" {
+		// hash password
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
+		if err != nil {
+			return nil, err
+		}
+
+		input.Password = string(hashedPassword)
+	} else {
+		input.Password = existingUser.Password
+	}
+
 	// Lakukan operasi update
 	update := bson.M{
 		"$set": bson.M{
-			"name":  input.Name,
-			"email": input.Email,
+			"name":     input.Name,
+			"email":    input.Email,
+			"password": input.Password,
 		},
 	}
 
@@ -102,9 +126,10 @@ func (db *DB) UpdateUser(id string, input *model.NewUser) (*model1.User, error) 
 
 	// Kembalikan data user yang diperbarui
 	updatedUser := &model1.User{
-		ID:    id,
-		Name:  input.Name,
-		Email: input.Email,
+		ID:       id,
+		Name:     input.Name,
+		Email:    input.Email,
+		Password: input.Password,
 	}
 	return updatedUser, nil
 }
