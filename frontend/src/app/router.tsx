@@ -1,9 +1,14 @@
-import { useMemo } from "react"
-import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom"
+import { useMemo } from "react";
+import {
+  Navigate,
+  RouterProvider,
+  createBrowserRouter,
+} from "react-router-dom";
 
-import { AppRoot } from "./routes/app/root"
-import ErrorPage from "./routes/error"
-import { LoadingLayout } from "@/components/layouts/loading-layout"
+import { AppRoot } from "./routes/app/root";
+import ErrorPage from "./routes/error";
+import { LoadingLayout } from "@/components/layouts/loading-layout";
+import { ProtectedRoute } from "@/lib/auth";
 
 const createRouter = () =>
   createBrowserRouter(
@@ -18,8 +23,8 @@ const createRouter = () =>
         hydrateFallbackElement: <LoadingLayout />,
         errorElement: <ErrorPage />,
         lazy: async () => {
-          const { LoginRoute } = await import("./routes/auth/login")
-          return { Component: LoginRoute }
+          const { LoginRoute } = await import("./routes/auth/login");
+          return { Component: LoginRoute };
         },
       },
       {
@@ -27,7 +32,9 @@ const createRouter = () =>
         hydrateFallbackElement: <LoadingLayout />,
         errorElement: <ErrorPage />,
         element: (
+          <ProtectedRoute>
             <AppRoot />
+          </ProtectedRoute>
         ),
         children: [
           {
@@ -39,10 +46,10 @@ const createRouter = () =>
                 lazy: async () => {
                   const { DashboardRoute } = await import(
                     "./routes/app/dashboard"
-                  )
+                  );
                   return {
                     Component: DashboardRoute,
-                  }
+                  };
                 },
               },
               {
@@ -50,21 +57,19 @@ const createRouter = () =>
                 lazy: async () => {
                   const { ProductsRoute } = await import(
                     "./routes/app/products"
-                  )
+                  );
                   return {
                     Component: ProductsRoute,
-                  }
+                  };
                 },
               },
               {
                 path: "users",
                 lazy: async () => {
-                  const { UsersRoute } = await import(
-                    "./routes/app/users"
-                  )
+                  const { UsersRoute } = await import("./routes/app/users");
                   return {
                     Component: UsersRoute,
-                  }
+                  };
                 },
               },
             ],
@@ -74,8 +79,8 @@ const createRouter = () =>
       {
         path: "*",
         lazy: async () => {
-          const { NotFoundRoute } = await import("./routes/not-found")
-          return { Component: NotFoundRoute }
+          const { NotFoundRoute } = await import("./routes/not-found");
+          return { Component: NotFoundRoute };
         },
       },
     ],
@@ -89,13 +94,17 @@ const createRouter = () =>
         v7_partialHydration: true,
       },
     }
-  )
+  );
 
 export const AppRouter = () => {
+  const router = useMemo(() => createRouter(), []);
 
-  const router = useMemo(() => createRouter(), [])
-
-  return <RouterProvider future={{
-    v7_startTransition: true,
-  }} router={router} />
-}
+  return (
+    <RouterProvider
+      future={{
+        v7_startTransition: true,
+      }}
+      router={router}
+    />
+  );
+};
