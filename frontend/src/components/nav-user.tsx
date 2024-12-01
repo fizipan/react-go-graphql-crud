@@ -28,6 +28,7 @@ import {
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
+import { Cookie } from "@/utils/storage";
 
 export function NavUser({
   user,
@@ -43,7 +44,7 @@ export function NavUser({
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
 
   const handleLogOut = () => {
-    localStorage.removeItem("token");
+    Cookie.clearTokens();
     toast.success("Logged out successfully");
     window.location.href = "/auth/login";
   };

@@ -1,4 +1,5 @@
 import { env } from "@/config/env";
+import { Cookie } from "@/utils/storage";
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 
@@ -8,7 +9,7 @@ const httpLink = createHttpLink({
 });
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem("token");
+  const token = Cookie.getAccessToken();
   return {
     headers: {
       ...headers,

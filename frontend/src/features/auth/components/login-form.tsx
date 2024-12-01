@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useLogin } from "../api/login";
 import { toast } from "sonner";
+import { Cookie } from "@/utils/storage";
 
 type LoginFormProps = {
   onSuccess: () => void;
@@ -43,7 +44,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
       });
 
       if (data?.login?.token) {
-        localStorage.setItem("token", data.login.token);
+        Cookie.setAccessToken(data.login.token);
         onSuccess();
       }
     } catch (e) {
