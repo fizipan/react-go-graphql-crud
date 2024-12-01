@@ -21,7 +21,6 @@ export const ProductsList = () => {
             data={products}
             columns={columns}
             isLoading={productsQuery.loading}
-            pageCount={1}
           />
         </CardContent>
       </Card>

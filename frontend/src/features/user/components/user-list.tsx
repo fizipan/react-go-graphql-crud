@@ -21,7 +21,6 @@ export const UsersList = () => {
             data={users}
             columns={columns}
             isLoading={usersQuery.loading}
-            pageCount={1}
           />
         </CardContent>
       </Card>

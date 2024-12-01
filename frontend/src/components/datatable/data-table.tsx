@@ -1,10 +1,11 @@
 import {
   ColumnDef,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  PaginationState,
   SortingState,
   useReactTable,
 } from "@tanstack/react-table"
@@ -13,13 +14,11 @@ import * as React from "react"
 import { DataTableToolbar } from "./data-table-toolbar"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table"
 import { Spinner } from "../ui/spinner"
-import useTableSearchParams from "@/hooks/use-table-search-params"
 import { DataTablePagination } from "./data-table-pagination"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  pageCount: number | undefined
   isLoading: boolean
   className?: string
 }
@@ -27,44 +26,31 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
   columns,
   data,
-  pageCount,
   isLoading,
 }: DataTableProps<TData, TValue>) {
-  const { getPageIndex, getPageSize } = useTableSearchParams()
-
-  const [{ pageIndex, pageSize }, setPaginate] =
-    React.useState<PaginationState>({
-      pageIndex: getPageIndex(),
-      pageSize: getPageSize(),
-    })
   const [rowSelection, setRowSelection] = React.useState({})
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  )
   const [sorting, setSorting] = React.useState<SortingState>([])
 
-  const pagination = React.useMemo(
-    () => ({
-      pageIndex,
-      pageSize,
-    }),
-    [pageIndex, pageSize]
-  )
 
   const table = useReactTable({
     data: data,
     columns,
-    pageCount,
     state: {
       sorting,
       rowSelection,
-      pagination,
+      columnFilters,
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
-    onPaginationChange: setPaginate,
+     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    manualPagination: true,
   })
 
   return (

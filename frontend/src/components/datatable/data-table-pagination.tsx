@@ -14,7 +14,6 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select"
-import useTableSearchParams from "@/hooks/use-table-search-params"
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>
@@ -23,7 +22,6 @@ interface DataTablePaginationProps<TData> {
 export function DataTablePagination<TData>({
   table,
 }: DataTablePaginationProps<TData>) {
-  const { setPageSize, setPageIndex } = useTableSearchParams()
   return (
     <div className="flex items-center justify-center lg:justify-end">
       <div className="flex flex-col items-center space-y-6 lg:flex-row lg:space-x-8 lg:space-y-0">
@@ -32,9 +30,7 @@ export function DataTablePagination<TData>({
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
-              setPageIndex(0)
               table.setPageIndex(0)
-              setPageSize(Number(value))
               table.setPageSize(Number(value))
             }}
           >
@@ -59,7 +55,6 @@ export function DataTablePagination<TData>({
             variant="outline"
             className="hidden size-8 p-0 lg:flex"
             onClick={() => {
-              setPageIndex(0)
               table.setPageIndex(0)
             }}
             disabled={!table.getCanPreviousPage()}
@@ -71,7 +66,6 @@ export function DataTablePagination<TData>({
             variant="outline"
             className="size-8 p-0"
             onClick={() => {
-              setPageIndex(table.getState().pagination.pageIndex - 1)
               table.previousPage()
             }}
             disabled={!table.getCanPreviousPage()}
@@ -83,7 +77,6 @@ export function DataTablePagination<TData>({
             variant="outline"
             className="size-8 p-0"
             onClick={() => {
-              setPageIndex(table.getState().pagination.pageIndex + 1)
               table.nextPage()
             }}
             disabled={!table.getCanNextPage()}
@@ -95,7 +88,6 @@ export function DataTablePagination<TData>({
             variant="outline"
             className="hidden size-8 p-0 lg:flex"
             onClick={() => {
-              setPageIndex(table.getPageCount() - 1)
               table.setPageIndex(table.getPageCount() - 1)
             }}
             disabled={!table.getCanNextPage()}

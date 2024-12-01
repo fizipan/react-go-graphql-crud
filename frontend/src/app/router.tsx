@@ -3,19 +3,19 @@ import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom"
 
 import { AppRoot } from "./routes/app/root"
 import ErrorPage from "./routes/error"
-import { Spinner } from "@/components/ui/spinner"
+import { LoadingLayout } from "@/components/layouts/loading-layout"
 
 const createRouter = () =>
   createBrowserRouter(
     [
       {
         path: "/",
-        hydrateFallbackElement: <Spinner />,
+        hydrateFallbackElement: <LoadingLayout />,
         element: <Navigate to="/app" replace />,
       },
       {
         path: "/auth/login",
-        hydrateFallbackElement: <Spinner />,
+        hydrateFallbackElement: <LoadingLayout />,
         errorElement: <ErrorPage />,
         lazy: async () => {
           const { LoginRoute } = await import("./routes/auth/login")
@@ -24,14 +24,14 @@ const createRouter = () =>
       },
       {
         path: "/app",
-        hydrateFallbackElement: <Spinner />,
+        hydrateFallbackElement: <LoadingLayout />,
         errorElement: <ErrorPage />,
         element: (
             <AppRoot />
         ),
         children: [
           {
-            hydrateFallbackElement: <Spinner />,
+            hydrateFallbackElement: <LoadingLayout />,
             errorElement: <ErrorPage />,
             children: [
               {
