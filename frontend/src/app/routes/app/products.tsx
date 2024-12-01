@@ -6,7 +6,7 @@ export const ProductsRoute = () => {
   return (
     <ContentLayout title="Products">
       <div className="mb-8 flex items-center justify-between">
-      <h1 className="mb-6 text-2xl font-bold">Products</h1>
+        <h1 className="mb-6 text-2xl font-bold">Products</h1>
         <CreateProduct />
       </div>
       <ProductsList />
