@@ -1,14 +1,17 @@
 package config
 
 import (
+	model "backend/cmd/app/domain/dao"
 	"context"
 	"net/http"
 	"strings"
 )
 
-type contextKey string
+var userCtxKey = &contextKey{"user"}
 
-const UserIDKey contextKey = "user_id"
+type contextKey struct {
+	id string
+}
 
 // AuthMiddleware validates JWT tokens and sets user_id in context
 func AuthMiddleware(next http.Handler) http.Handler {
@@ -33,7 +36,14 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), UserIDKey, userID)
+		user := model.User{ID: userID}
+
+		ctx := context.WithValue(r.Context(), userCtxKey, &user)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
+}
+
+func ForContext(ctx context.Context) *model.User {
+	raw, _ := ctx.Value(userCtxKey).(*model.User)
+	return raw
 }

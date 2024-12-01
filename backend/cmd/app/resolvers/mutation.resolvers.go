@@ -7,8 +7,10 @@ package resolvers
 import (
 	model "backend/cmd/app/domain"
 	model1 "backend/cmd/app/domain/dao"
+	"backend/config"
 	"backend/graph"
 	"context"
+	"fmt"
 )
 
 // Login is the resolver for the login field.
@@ -22,6 +24,11 @@ func (r *mutationResolver) Login(ctx context.Context, input model.NewLogin) (*mo
 
 // CreateUser adalah resolver untuk field createUser
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model1.User, error) {
+	auth := config.ForContext(ctx)
+	if auth == nil {
+		return nil, fmt.Errorf("access denied")
+	}
+
 	user, err := r.DB.CreateUser(&input)
 	if err != nil {
 		return nil, err
@@ -31,6 +38,11 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 
 // UpdateUser is the resolver for the updateUser field.
 func (r *mutationResolver) UpdateUser(ctx context.Context, id string, input model.NewUser) (*model1.User, error) {
+	auth := config.ForContext(ctx)
+	if auth == nil {
+		return nil, fmt.Errorf("access denied")
+	}
+
 	user, err := r.DB.UpdateUser(id, &input)
 	if err != nil {
 		return nil, err
@@ -40,6 +52,11 @@ func (r *mutationResolver) UpdateUser(ctx context.Context, id string, input mode
 
 // DeleteUser is the resolver for the deleteUser field.
 func (r *mutationResolver) DeleteUser(ctx context.Context, id string) (*model1.User, error) {
+	auth := config.ForContext(ctx)
+	if auth == nil {
+		return nil, fmt.Errorf("access denied")
+	}
+
 	user, err := r.DB.DeleteUser(id)
 	if err != nil {
 		return nil, err
@@ -49,6 +66,11 @@ func (r *mutationResolver) DeleteUser(ctx context.Context, id string) (*model1.U
 
 // CreateProduct is the resolver for the createProduct field.
 func (r *mutationResolver) CreateProduct(ctx context.Context, input model.NewProduct) (*model1.Product, error) {
+	auth := config.ForContext(ctx)
+	if auth == nil {
+		return nil, fmt.Errorf("access denied")
+	}
+
 	product, err := r.DB.CreateProduct(&input)
 	if err != nil {
 		return nil, err
@@ -58,6 +80,11 @@ func (r *mutationResolver) CreateProduct(ctx context.Context, input model.NewPro
 
 // UpdateProduct is the resolver for the updateProduct field.
 func (r *mutationResolver) UpdateProduct(ctx context.Context, id string, input model.NewProduct) (*model1.Product, error) {
+	auth := config.ForContext(ctx)
+	if auth == nil {
+		return nil, fmt.Errorf("access denied")
+	}
+
 	product, err := r.DB.UpdateProduct(id, &input)
 	if err != nil {
 		return nil, err
@@ -67,6 +94,11 @@ func (r *mutationResolver) UpdateProduct(ctx context.Context, id string, input m
 
 // DeleteProduct is the resolver for the deleteProduct field.
 func (r *mutationResolver) DeleteProduct(ctx context.Context, id string) (*model1.Product, error) {
+	auth := config.ForContext(ctx)
+	if auth == nil {
+		return nil, fmt.Errorf("access denied")
+	}
+
 	product, err := r.DB.DeleteProduct(id)
 	if err != nil {
 		return nil, err

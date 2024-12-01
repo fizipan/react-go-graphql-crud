@@ -6,6 +6,7 @@ package resolvers
 
 import (
 	model "backend/cmd/app/domain/dao"
+	"backend/config"
 	"backend/graph"
 	"context"
 	"fmt"
@@ -18,6 +19,11 @@ func (r *queryResolver) Me(ctx context.Context) (*model.User, error) {
 
 // GetUsers is the resolver for the getUsers field.
 func (r *queryResolver) GetUsers(ctx context.Context) ([]*model.User, error) {
+	auth := config.ForContext(ctx)
+	if auth == nil {
+		return nil, fmt.Errorf("access denied")
+	}
+
 	users, err := r.DB.GetUsers()
 	if err != nil {
 		return nil, err
@@ -27,6 +33,11 @@ func (r *queryResolver) GetUsers(ctx context.Context) ([]*model.User, error) {
 
 // GetUser is the resolver for the getUser field.
 func (r *queryResolver) GetUser(ctx context.Context, id string) (*model.User, error) {
+	auth := config.ForContext(ctx)
+	if auth == nil {
+		return nil, fmt.Errorf("access denied")
+	}
+
 	user, err := r.DB.GetUser(id)
 	if err != nil {
 		return nil, err
@@ -36,6 +47,11 @@ func (r *queryResolver) GetUser(ctx context.Context, id string) (*model.User, er
 
 // GetProducts is the resolver for the getProducts field.
 func (r *queryResolver) GetProducts(ctx context.Context) ([]*model.Product, error) {
+	auth := config.ForContext(ctx)
+	if auth == nil {
+		return nil, fmt.Errorf("access denied")
+	}
+
 	products, err := r.DB.GetProducts()
 	if err != nil {
 		return nil, err
@@ -45,6 +61,11 @@ func (r *queryResolver) GetProducts(ctx context.Context) ([]*model.Product, erro
 
 // GetProduct is the resolver for the getProduct field.
 func (r *queryResolver) GetProduct(ctx context.Context, id string) (*model.Product, error) {
+	auth := config.ForContext(ctx)
+	if auth == nil {
+		return nil, fmt.Errorf("access denied")
+	}
+
 	product, err := r.DB.GetProduct(id)
 	if err != nil {
 		return nil, err
