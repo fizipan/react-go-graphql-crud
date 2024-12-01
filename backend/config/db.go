@@ -241,6 +241,7 @@ func (db *DB) UpdateProduct(id string, input *model.NewProduct) (*model1.Product
 		"$set": bson.M{
 			"name":  input.Name,
 			"price": input.Price,
+			"stock": input.Stock,
 		},
 	}
 
@@ -254,6 +255,7 @@ func (db *DB) UpdateProduct(id string, input *model.NewProduct) (*model1.Product
 		ID:    id,
 		Name:  input.Name,
 		Price: input.Price,
+		Stock: input.Stock,
 	}
 	return updatedProduct, nil
 }

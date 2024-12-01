@@ -11,9 +11,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { useDeleteProduct } from "../api/delete-product"
 
 type DeleteProductProps = {
-  productId: number
+  productId: string
   isOpen: boolean
   setIsOpen: (value: boolean) => void
 }
@@ -23,20 +24,19 @@ export const DeleteProduct = ({
   isOpen,
   setIsOpen,
 }: DeleteProductProps) => {
-  // const deleteProductMutation = useDeleteProduct({
-  //   siteId,
-  //   mutationConfig: {
-  //     onSuccess: () => {
-  //       toast.success(
-  //         t("ModalDelete.SuccessMessage", { name: "Category Menu" })
-  //       )
-  //     },
-  //   },
-  // })
+  const [deleteProduct, { loading }] = useDeleteProduct({ productId })
 
-  // const deleteAction = () => {
-  //   deleteProductMutation.mutateAsync({ productId, siteId })
-  // }
+  const deleteAction = async () => {
+    try {
+      await deleteProduct()
+      toast.success("Product deleted successfully")
+    } catch (error) {
+      toast.error("Failed to delete product")
+      console.error(error)
+    } finally {
+      setIsOpen(false)
+    }
+  }
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
@@ -53,14 +53,10 @@ export const DeleteProduct = ({
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction asChild>
             <Button
-              onClick={() => {
-                // deleteAction()
-                console.log(productId)
-                toast.success("Category Menu deleted")
-                setIsOpen(false)
-              }}
+              disabled={loading}
+              onClick={deleteAction}
             >
-              Delete
+             {loading ? "Loading..." : "Delete"}
             </Button>
           </AlertDialogAction>
         </AlertDialogFooter>

@@ -12,6 +12,7 @@ import {
 import { ProductColumnSchema } from "../types/table"
 import { EllipsisVertical } from "lucide-react"
 import { DeleteProduct } from "./delete-product"
+import { UpdateProduct } from "./update-product"
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -53,11 +54,11 @@ export function DataTableRowActions<TData>({
             </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {/* <UpdateProduct
+      <UpdateProduct
         productData={product}
         isOpen={state === "edit"}
         setIsOpen={closeModal}
-      /> */}
+      />
       <DeleteProduct
         productId={product.id}
         isOpen={state === "delete"}

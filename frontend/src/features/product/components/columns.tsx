@@ -2,6 +2,8 @@ import { ColumnDef } from "@tanstack/react-table"
 import { ProductColumnDef } from "../types/table"
 import { DataTableColumnHeader } from "@/components/datatable/data-table-header"
 import { DataTableRowActions } from "./row-actions"
+import { formatCurrency } from "@/utils/currency"
+import { formatNumber } from "@/utils/number"
 
 export const columns: ColumnDef<ProductColumnDef>[] = [
   {
@@ -21,6 +23,7 @@ export const columns: ColumnDef<ProductColumnDef>[] = [
         title="Price"
       />
     ),
+    cell: ({ row }) => formatCurrency({value: row.original.price, currencyCode: "IDR"}),
   },
   {
     accessorKey: "stock",
@@ -30,6 +33,7 @@ export const columns: ColumnDef<ProductColumnDef>[] = [
         title="Stock"
       />
     ),
+    cell: ({ row }) => formatNumber(row.original.stock),
   },
   {
     id: "actions",
