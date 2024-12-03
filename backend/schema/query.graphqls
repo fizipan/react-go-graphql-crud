@@ -1,9 +1,9 @@
 type Query {
-    me: User!
-    
-    getUsers: [User!]!
-    getUser(id: ID!): User!
-    
-    getProducts: [Product!]!
-    getProduct(id: ID!): Product!
+  me: User!
+
+  getUsers: [User!]!
+  getUser(id: ID!): User!
+
+  getProducts: [Product!]!
+  getProduct(id: ID!): Product!
 }

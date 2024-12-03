@@ -1,10 +1,10 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect } from "react"
-import { useForm } from "react-hook-form"
-import { toast } from "sonner"
-import * as z from "zod"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import * as z from "zod";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -12,7 +12,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form";
 import {
   Dialog,
   DialogClose,
@@ -21,27 +21,31 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { ProductColumnDef } from "../types/table"
-import { useUpdateProductSchemaTranslation } from "../types/form"
-import { Input } from "@/components/ui/input"
-import { formatInputNumber, formatNumber, parseFloating } from "@/utils/number"
-import { useUpdateProduct } from "../api/update-product"
-
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { ProductColumnDef } from "../types/table";
+import { useUpdateProductSchemaTranslation } from "../types/form";
+import { Input } from "@/components/ui/input";
+import {
+  formatInputNumber,
+  formatNumber,
+  parseFloating,
+  parseNumber,
+} from "@/utils/number";
+import { useUpdateProduct } from "../api/update-product";
 
 type UpdateProductProps = {
-  productData: ProductColumnDef
-  isOpen: boolean
-  setIsOpen: (value: boolean) => void
-}
+  productData: ProductColumnDef;
+  isOpen: boolean;
+  setIsOpen: (value: boolean) => void;
+};
 
 export const UpdateProduct = ({
   productData,
   isOpen,
   setIsOpen,
 }: UpdateProductProps) => {
-  const updateProductSchema = useUpdateProductSchemaTranslation()
+  const updateProductSchema = useUpdateProductSchemaTranslation();
 
   const form = useForm({
     resolver: zodResolver(updateProductSchema),
@@ -50,17 +54,19 @@ export const UpdateProduct = ({
       price: "",
       stock: "",
     },
-  })
+  });
 
   useEffect(() => {
     form.reset({
       name: productData.name,
       price: formatNumber(productData.price),
       stock: formatNumber(productData.stock),
-    })
-  }, [productData, form])
+    });
+  }, [productData, form]);
 
-  const [updateProduct, { loading }] = useUpdateProduct({productId: productData.id})
+  const [updateProduct, { loading }] = useUpdateProduct({
+    productId: productData.id,
+  });
 
   async function onSubmit(values: z.infer<typeof updateProductSchema>) {
     try {
@@ -69,18 +75,17 @@ export const UpdateProduct = ({
           input: {
             name: values.name,
             price: parseFloating(values.price),
-            stock: parseInt(values.stock),
+            stock: parseNumber(values.stock),
           },
         },
-      })
-      toast.success("Product updated successfully")
-    }
-    catch (error) {
-      console.error(error)
-      toast.error("Failed to update product")
+      });
+      toast.success("Product updated successfully");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to update product");
     } finally {
-      form.reset()
-      setIsOpen(false)
+      form.reset();
+      setIsOpen(false);
     }
   }
 
@@ -88,12 +93,8 @@ export const UpdateProduct = ({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="p-0">
         <DialogHeader className="px-6 pb-2 pt-6">
-          <DialogTitle>
-            Edit Product
-          </DialogTitle>
-          <DialogDescription>
-            Edit the name of the pod
-          </DialogDescription>
+          <DialogTitle>Edit Product</DialogTitle>
+          <DialogDescription>Edit the name of the pod</DialogDescription>
         </DialogHeader>
         <ScrollArea className="max-h-[400px]">
           <div className="px-6">
@@ -109,9 +110,7 @@ export const UpdateProduct = ({
                       name="name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>
-                            Name
-                          </FormLabel>
+                          <FormLabel>Name</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -128,9 +127,7 @@ export const UpdateProduct = ({
                       name="price"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>
-                            Price
-                          </FormLabel>
+                          <FormLabel>Price</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -148,9 +145,7 @@ export const UpdateProduct = ({
                       name="stock"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>
-                            Stock
-                          </FormLabel>
+                          <FormLabel>Stock</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -170,18 +165,12 @@ export const UpdateProduct = ({
           </div>
         </ScrollArea>
         <DialogFooter className="p-6">
-          <DialogClose className="mr-4">
-            Cancel
-          </DialogClose>
-          <Button
-            type="submit"
-            disabled={loading}
-            form="update-product-form"
-          >
-           {loading ? "Updating..." : "Update"}
+          <DialogClose className="mr-4">Cancel</DialogClose>
+          <Button type="submit" disabled={loading} form="update-product-form">
+            {loading ? "Updating..." : "Update"}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};

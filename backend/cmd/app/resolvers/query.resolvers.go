@@ -19,7 +19,9 @@ func (r *queryResolver) Me(ctx context.Context) (*model.User, error) {
 
 // GetUsers is the resolver for the getUsers field.
 func (r *queryResolver) GetUsers(ctx context.Context) ([]*model.User, error) {
+	// Get the user from the context
 	auth := config.ForContext(ctx)
+
 	if auth == nil {
 		return nil, fmt.Errorf("access denied")
 	}

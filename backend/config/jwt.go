@@ -9,11 +9,14 @@ import (
 
 // GenerateJWT generates a JWT token
 func GenerateJWT(userID string) (string, error) {
+	// Create the Claims
 	claims := jwt.MapClaims{
 		"user_id": userID,
 		"exp":     time.Now().Add(time.Hour * 24).Unix(),
 	}
+	// Create the token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	// Sign the token
 	return token.SignedString(EnvJWTSecret())
 }
 
@@ -30,6 +33,7 @@ func ValidateJWT(tokenString string) (jwt.MapClaims, error) {
 		return nil, err
 	}
 
+	// Check if the token is valid
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		return claims, nil
 	}

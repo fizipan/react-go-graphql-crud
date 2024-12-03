@@ -16,6 +16,7 @@ import (
 const defaultPort = "8080"
 
 func main() {
+	// Port
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
@@ -29,6 +30,7 @@ func main() {
 		DB: db,
 	}
 
+	// Inisialisasi server GraphQL 
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: resolver}))
 
 	// Middleware CORS

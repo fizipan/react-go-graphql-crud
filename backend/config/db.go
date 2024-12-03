@@ -20,11 +20,13 @@ type DB struct {
 }
 
 func ConnectDB() *DB {
+	// Connect to MongoDB
 	client, err := mongo.NewClient(options.Client().ApplyURI(EnvMongoURI()))
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	// Set timeout untuk koneksi ke database MongoDB selama 10 detik
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	err = client.Connect(ctx)
@@ -46,18 +48,23 @@ func colHelper(db *DB, collectionName string) *mongo.Collection {
 	return db.client.Database("testdb").Collection(collectionName)
 }
 
-// login
+// login 
 func (db *DB) Login(input *model.NewLogin) (*model1.Auth, error) {
+	// get collection users
 	collection := colHelper(db, "users")
+
+	// set timeout 10 seconds
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
+	// find user by email
 	var user model1.User
 	err := collection.FindOne(ctx, bson.M{"email": input.Email}).Decode(&user)
 	if err != nil {
 		return nil, err
 	}
 
+	// compare password
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password))
 	if err != nil {
 		return nil, err
@@ -69,6 +76,7 @@ func (db *DB) Login(input *model.NewLogin) (*model1.Auth, error) {
 		return nil, err
 	}
 
+	// return token
 	auth := &model1.Auth{
 		Token: token,
 	}

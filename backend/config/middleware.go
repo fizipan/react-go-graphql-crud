@@ -23,6 +23,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
+		// Validate token and set user_id in context
 		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 		claims, err := ValidateJWT(tokenString)
 		if err != nil {
@@ -30,14 +31,17 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
+		// Set user_id in context
 		userID, ok := claims["user_id"].(string)
 		if !ok {
 			http.Error(w, "invalid token payload", http.StatusUnauthorized)
 			return
 		}
 
+		// Set user in context
 		user := model.User{ID: userID}
 
+		// Add user to context
 		ctx := context.WithValue(r.Context(), userCtxKey, &user)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
